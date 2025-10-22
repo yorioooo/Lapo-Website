@@ -5,7 +5,7 @@ import Navbar from '../components/Navbar';
 
 const About = () => {
   return (
-    <div className="bg-cover bg-center bg-no-repeat min-h-screen" style={{ backgroundImage: `url(${batak4})` }}>  // Single background for whole page
+    <div className="bg-cover bg-center bg-no-repeat min-h-screen" style={{ backgroundImage: `url(${batak4})` }}>  // 
       <Navbar />
       
       {/* Hero Section: Larger, centered intro with staggered animation */}

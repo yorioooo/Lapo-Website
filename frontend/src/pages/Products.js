@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import batak1 from '../images/batak9.jpeg';  // Hero background
+import batak1 from '../images/batak1.jpeg';  // Hero background
+import miegomak from '../images/miegomak.jpeg';  // Mie Gomak
+import ikan from '../images/ikan.jpeg';  // Arsik Ikan Mas
+import babi from '../images/babi.jpeg';  // Saksang Babi
 import Navbar from '../components/Navbar';
 // Footer global di App.js
 
@@ -31,6 +34,20 @@ const Products = () => {
 
     fetchProducts();
   }, []);  // Fetch sekali
+
+  // Map local image based on product id
+  const getLocalImage = (productId) => {
+    switch (productId) {
+      case 1:
+        return miegomak;
+      case 2:
+        return babi;
+      case 3:
+        return ikan;
+      default:
+        return 'https://via.placeholder.com/400x300?text=No+Image';
+    }
+  };
 
   if (loading) {
     return (
@@ -91,7 +108,7 @@ const Products = () => {
         </div>
       </motion.section>
 
-      {/* Section Product Grid – Consume API, detailed cards */}
+      {/* Section Product Grid – Consume API, detailed cards with local images */}
       <motion.section 
         initial={{ opacity: 0, y: 50 }} 
         whileInView={{ opacity: 1, y: 0 }} 
@@ -111,7 +128,7 @@ const Products = () => {
                 className="group relative rounded-2xl overflow-hidden shadow-2xl bg-gray-50 hover:bg-white transition-all duration-500"
               >
                 <img 
-                  src={product.image_url || 'https://via.placeholder.com/400x300?text=No+Image'} 
+                  src={getLocalImage(product.id)}  // Local image based on id
                   alt={product.name} 
                   className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" 
                 />
@@ -145,34 +162,52 @@ const Products = () => {
         </div>
       </motion.section>
 
-      {/* Section Why Choose Our Products – Detailed explanations, no images */}
+      {/* Section Why Choose Our Products – Detailed explanations, integrated design */}
       <motion.section 
         initial={{ opacity: 0, y: 50 }} 
         whileInView={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.8 }}
         className="py-20 bg-batak-krem"
       >
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-16 text-batak-red">Why Choose Our Products</h2>
-          <div className="space-y-12">
-            <div className="text-center">
-              <h3 className="text-3xl font-serif font-bold mb-6 text-batak-green">Authentic Batak Heritage</h3>
-              <p className="text-xl text-gray-800 leading-relaxed max-w-4xl mx-auto">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-4xl font-serif font-bold text-center mb-16 text-batak-red">Why Choose Our Products</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.6, delay: 0.1 }}
+              whileHover={{ scale: 1.02 }} 
+              className="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500"
+            >
+              <h3 className="text-2xl font-serif font-bold mb-4 text-batak-green">Authentic Batak Heritage</h3>
+              <p className="text-lg text-gray-700 leading-relaxed">
                 Every product is rooted in generations-old recipes from the highlands of North Sumatra, using rare andaliman spices and traditional cooking methods that capture the true essence of Batak culture. We don't just serve food; we serve stories, ensuring each bite transports you to the misty shores of Lake Toba and the bustling markets of Tapanuli.
               </p>
-            </div>
-            <div className="text-center">
-              <h3 className="text-3xl font-serif font-bold mb-6 text-batak-green">Fresh & Sustainable Sourcing</h3>
-              <p className="text-xl text-gray-800 leading-relaxed max-w-4xl mx-auto">
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.6, delay: 0.2 }}
+              whileHover={{ scale: 1.02 }} 
+              className="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500"
+            >
+              <h3 className="text-2xl font-serif font-bold mb-4 text-batak-green">Fresh & Sustainable Sourcing</h3>
+              <p className="text-lg text-gray-700 leading-relaxed">
                 We partner exclusively with local Batak farmers and fishermen, sourcing seasonal ingredients like fresh ikan mas and premium beef directly from the source. This not only guarantees peak freshness and flavor but also supports sustainable practices and community empowerment, creating a positive impact on the ecosystems and economies of Sumatera Utara.
               </p>
-            </div>
-            <div className="text-center">
-              <h3 className="text-3xl font-serif font-bold mb-6 text-batak-green">Health & Tradition in Harmony</h3>
-              <p className="text-xl text-gray-800 leading-relaxed max-w-4xl mx-auto">
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.6, delay: 0.3 }}
+              whileHover={{ scale: 1.02 }} 
+              className="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500"
+            >
+              <h3 className="text-2xl font-serif font-bold mb-4 text-batak-green">Health & Tradition in Harmony</h3>
+              <p className="text-lg text-gray-700 leading-relaxed">
                 Our dishes balance the robust, nutrient-dense qualities of Batak cuisine with modern dietary needs, offering high-protein options like saksang and fiber-rich mie gomak without compromising on taste. Free from artificial additives, each meal is a wholesome tribute to tradition, promoting well-being while honoring the culinary wisdom passed down through centuries.
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </motion.section>
