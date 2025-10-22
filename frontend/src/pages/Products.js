@@ -1,150 +1,106 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
+import batak1 from '../images/batak9.jpeg';  // Hero background
 import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+// Footer global di App.js
 
 const Products = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const products = [
-    { id: 1, name: 'Mie Gomak', description: 'Mie halus khas Tapanuli dengan kuah santan pedas dan rempah andaliman segar.', image: 'https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=800&h=600&fit=crop' },
-    { id: 2, name: 'Saksang Babi', description: 'Daging babi jeroan dimasak santan hitam, kaya protein dan rasa umami Batak autentik.', image: 'https://images.unsplash.com/photo-1633403913605-75d7d7c8c6f5?w=800&h=600&fit=crop' },
-    { id: 3, name: 'Arsik Ikan Mas', description: 'Ikan mas segar dengan bumbu kuning serai dan kunyit, hidangan pesta Batak yang sehat.', image: 'https://images.unsplash.com/photo-1559314809-0f31657def5c?w=800&h=600&fit=crop' },
-  ];
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % products.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + products.length) % products.length);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        console.log('Fetching products from API...');
+        const res = await axios.get('http://localhost:5000/api/products');
+        console.log('Consume success from products table:', res.data.length, 'items');
+        console.log('Sample consumed data:', res.data[0]);  // Debug: Konfirm dari DB
+        setProducts(res.data || []);
+      } catch (err) {
+        console.error('Consume Error:', {
+          message: err.message,
+          status: err.response?.status,
+          data: err.response?.data
+        });
+        setProducts([]);  // Kosong jika error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);  // Fetch sekali
+
+  if (loading) {
+    return (
+      <div className="bg-batak-krem min-h-screen flex items-center justify-center">
+        <Navbar />
+        <div className="text-center py-8">Loading products from DB...</div>
+      </div>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <div className="bg-batak-krem min-h-screen flex items-center justify-center">
+        <Navbar />
+        <div className="text-center py-8">No products data in table. Run SQL insert in pgAdmin.</div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-batak-krem min-h-screen">
       <Navbar />
       
-      {/* Section Get Know Us Better: Mirip Screenshot – Dua Kolom Teaser */}
+      {/* Hero Section: Background dengan batak1, elegant intro */}
       <motion.section 
         initial={{ opacity: 0 }} 
-        whileInView={{ opacity: 1 }} 
-        transition={{ duration: 0.8 }}
-        className="py-20 bg-white"
+        animate={{ opacity: 1 }} 
+        className="relative h-screen bg-cover bg-center flex items-center justify-center"
+        style={{ backgroundImage: `url(${batak1})` }}  // Background lokal batak1
       >
-        <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-8">
-          {/* Kolom Kiri: Company Profile */}
-          <motion.div 
-            whileHover={{ scale: 1.02 }} 
-            className="relative rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-batak-red/20 to-batak-krem"
-          >
-            <img 
-              src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&h=400&fit=crop"  // Gambar lapo tradisional
-              alt="Lapo Profile" 
-              className="w-full h-96 object-cover" 
-            />
-            <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-              <motion.div 
-                whileHover={{ scale: 1.1 }} 
-                className="text-center text-white"
-              >
-                <h2 className="text-3xl font-bold mb-4">GET KNOW US BETTER</h2>
-                <h3 className="text-2xl mb-6">OUR COMPANY PROFILE</h3>
-                <motion.div 
-                  whileHover={{ scale: 1.2 }} 
-                  className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4"
-                >
-                  <span className="text-2xl">▶</span>  {/* Play button */}
-                </motion.div>
-                <p className="text-lg">Tonton cerita kami dari Tanah Batak</p>
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* Kolom Kanan: Product Knowledge */}
-          <motion.div 
-            whileHover={{ scale: 1.02 }} 
-            className="relative rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-batak-green/20 to-batak-krem"
-          >
-            <img 
-              src="https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?w=600&h=400&fit=crop"  // Gambar mie gomak
-              alt="Product Teaser" 
-              className="w-full h-96 object-cover" 
-            />
-            <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-              <motion.div 
-                whileHover={{ scale: 1.1 }} 
-                className="text-center text-white"
-              >
-                <h2 className="text-3xl font-bold mb-4">GET KNOW US BETTER</h2>
-                <h3 className="text-2xl mb-6">OUR PRODUCT KNOWLEDGE</h3>
-                <motion.div 
-                  whileHover={{ scale: 1.2 }} 
-                  className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4"
-                >
-                  <span className="text-2xl">▶</span>
-                </motion.div>
-                <p className="text-lg">Eksplor rasa autentik Batak</p>
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* Slider Produk: Mirip Carousel Slide */}
-      <motion.section 
-        initial={{ opacity: 0, x: -50 }} 
-        whileInView={{ opacity: 1, x: 0 }} 
-        transition={{ duration: 0.8 }}
-        className="py-20 bg-gray-100"
-      >
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-batak-red">Produk Unggulan Kami</h2>
-          <div className="relative">
-            <AnimatePresence mode="wait">
-              <motion.img 
-                key={currentSlide}
-                src={products[currentSlide].image} 
-                alt={products[currentSlide].name} 
-                className="w-full h-[500px] object-cover rounded-2xl shadow-2xl mx-auto"
-                initial={{ opacity: 0, x: 100 }} 
-                animate={{ opacity: 1, x: 0 }} 
-                exit={{ opacity: 0, x: -100 }} 
-                transition={{ duration: 0.5 }}
-              />
-            </AnimatePresence>
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-              {products.map((_, index) => (
-                <button 
-                  key={index} 
-                  onClick={() => setCurrentSlide(index)}
-                  className={`w-3 h-3 rounded-full ${index === currentSlide ? 'bg-batak-red' : 'bg-white'}`}
-                />
-              ))}
-            </div>
-            <button 
-              onClick={prevSlide} 
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-batak-red/80 text-white p-2 rounded-full hover:bg-batak-red"
+        <div className="absolute inset-0 bg-batak-red/50 flex items-center justify-center">
+          <div className="text-center text-white px-4">
+            <motion.h1 
+              initial={{ y: 50, opacity: 0 }} 
+              animate={{ y: 0, opacity: 1 }} 
+              transition={{ duration: 0.8 }}
+              className="text-6xl md:text-8xl font-serif font-bold mb-6"
             >
-              ‹
-            </button>
-            <button 
-              onClick={nextSlide} 
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-batak-red/80 text-white p-2 rounded-full hover:bg-batak-red"
+              Our Products
+            </motion.h1>
+            <motion.p 
+              initial={{ y: 50, opacity: 0 }} 
+              animate={{ y: 0, opacity: 1 }} 
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-2xl md:text-3xl mb-8"
             >
-              ›
-            </button>
-            <div className="text-center mt-8">
-              <h3 className="text-2xl font-semibold mb-2">{products[currentSlide].name}</h3>
-              <p className="text-gray-600 max-w-2xl mx-auto">{products[currentSlide].description}</p>
-            </div>
+              Discover Authentic Batak Flavors
+            </motion.p>
+            <motion.p 
+              initial={{ y: 50, opacity: 0 }} 
+              animate={{ y: 0, opacity: 1 }} 
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-xl md:text-2xl leading-relaxed max-w-3xl mx-auto"
+            >
+              Explore our handcrafted selection of traditional Batak dishes, each one a masterpiece of spice and heritage, sourced fresh from North Sumatra's heartland.
+            </motion.p>
           </div>
         </div>
       </motion.section>
 
-      {/* Grid Produk Artistik: 3 Kolom Mirip Screenshot, Tanpa Harga */}
+      {/* Section Product Grid – Consume API, detailed cards */}
       <motion.section 
-        initial={{ opacity: 0 }} 
-        whileInView={{ opacity: 1 }} 
+        initial={{ opacity: 0, y: 50 }} 
+        whileInView={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.8 }}
         className="py-20 bg-white"
       >
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-batak-green">Galeri Produk Kami</h2>
-          <div className="grid md:grid-cols-3 gap-4">
+          <h2 className="text-4xl font-bold text-center mb-16 text-batak-red">Our Signature Products</h2>
+          <div className="grid md:grid-cols-3 gap-8">
             {products.map((product, index) => (
               <motion.div 
                 key={product.id} 
@@ -152,18 +108,36 @@ const Products = () => {
                 whileInView={{ opacity: 1, y: 0 }} 
                 transition={{ duration: 0.6, delay: index * 0.2 }}
                 whileHover={{ scale: 1.05 }} 
-                className="group relative rounded-2xl overflow-hidden shadow-lg bg-gray-50"
+                className="group relative rounded-2xl overflow-hidden shadow-2xl bg-gray-50 hover:bg-white transition-all duration-500"
               >
                 <img 
-                  src={product.image} 
+                  src={product.image_url || 'https://via.placeholder.com/400x300?text=No+Image'} 
                   alt={product.name} 
-                  className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-500" 
+                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500" 
                 />
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="absolute bottom-4 left-4 text-white">
-                    <h3 className="text-xl font-semibold">{product.name}</h3>
-                    <p className="text-sm">{product.description}</p>
+                <div className="p-6">
+                  <h3 className="text-2xl font-serif font-bold mb-3 text-batak-red">{product.name}</h3>
+                  <p className="text-lg text-gray-700 leading-relaxed mb-4">{product.description}</p>
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center">
+                      <span className="text-batak-green font-semibold">Ingredients:</span>
+                      <p className="ml-2 text-sm text-gray-600">Fresh local spices, andaliman, santan, and premium proteins.</p>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="text-batak-green font-semibold">Preparation:</span>
+                      <p className="ml-2 text-sm text-gray-600">Slow-cooked with traditional Batak techniques for maximum flavor infusion.</p>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="text-batak-green font-semibold">Serving Suggestion:</span>
+                      <p className="ml-2 text-sm text-gray-600">Pair with steamed rice and fresh ulam for an authentic Batak feast.</p>
+                    </div>
                   </div>
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }} 
+                    className="w-full bg-batak-red text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors"
+                  >
+                    EXPLORE MORE
+                  </motion.button>
                 </div>
               </motion.div>
             ))}
@@ -171,46 +145,37 @@ const Products = () => {
         </div>
       </motion.section>
 
-      {/* Section Penjelasan: Mirip "Why Gluten-Free..." – Adaptasi ke Batak */}
+      {/* Section Why Choose Our Products – Detailed explanations, no images */}
       <motion.section 
-        initial={{ opacity: 0 }} 
-        whileInView={{ opacity: 1 }} 
+        initial={{ opacity: 0, y: 50 }} 
+        whileInView={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.8 }}
         className="py-20 bg-batak-krem"
       >
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center gap-12">
-          {/* Gambar Latar: Cassava -> Andaliman/Batak Ingredients */}
-          <motion.div 
-            whileHover={{ scale: 1.05 }} 
-            className="md:w-1/2"
-          >
-            <img 
-              src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&h=400&fit=crop"  // Ganti dengan gambar rempah Batak
-              alt="Batak Ingredients" 
-              className="rounded-2xl shadow-xl" 
-            />
-          </motion.div>
-          <div className="md:w-1/2">
-            <h2 className="text-4xl font-bold mb-8 text-batak-green">Why Batak Food is a Good Choice</h2>
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-2xl font-semibold mb-2 text-batak-red">Rasa Autentik & Sehat</h3>
-                <p className="text-gray-600">Menggunakan rempah segar seperti andaliman, makanan Batak membantu pencernaan dan kaya antioksidan alami.</p>
-              </div>
-              <div>
-                <h3 className="text-2xl font-semibold mb-2 text-batak-red">Dukung Lokal</h3>
-                <p className="text-gray-600">Setiap hidangan sumber dari petani Batak, memastikan kesegaran dan mendukung ekonomi daerah.</p>
-              </div>
-              <div>
-                <h3 className="text-2xl font-semibold mb-2 text-batak-red">Nutrisi Lengkap</h3>
-                <p className="text-gray-600">Protein tinggi dari daging segar dan karbo dari mie tradisional, ideal untuk gaya hidup aktif.</p>
-              </div>
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-4xl font-bold text-center mb-16 text-batak-red">Why Choose Our Products</h2>
+          <div className="space-y-12">
+            <div className="text-center">
+              <h3 className="text-3xl font-serif font-bold mb-6 text-batak-green">Authentic Batak Heritage</h3>
+              <p className="text-xl text-gray-800 leading-relaxed max-w-4xl mx-auto">
+                Every product is rooted in generations-old recipes from the highlands of North Sumatra, using rare andaliman spices and traditional cooking methods that capture the true essence of Batak culture. We don't just serve food; we serve stories, ensuring each bite transports you to the misty shores of Lake Toba and the bustling markets of Tapanuli.
+              </p>
+            </div>
+            <div className="text-center">
+              <h3 className="text-3xl font-serif font-bold mb-6 text-batak-green">Fresh & Sustainable Sourcing</h3>
+              <p className="text-xl text-gray-800 leading-relaxed max-w-4xl mx-auto">
+                We partner exclusively with local Batak farmers and fishermen, sourcing seasonal ingredients like fresh ikan mas and premium beef directly from the source. This not only guarantees peak freshness and flavor but also supports sustainable practices and community empowerment, creating a positive impact on the ecosystems and economies of Sumatera Utara.
+              </p>
+            </div>
+            <div className="text-center">
+              <h3 className="text-3xl font-serif font-bold mb-6 text-batak-green">Health & Tradition in Harmony</h3>
+              <p className="text-xl text-gray-800 leading-relaxed max-w-4xl mx-auto">
+                Our dishes balance the robust, nutrient-dense qualities of Batak cuisine with modern dietary needs, offering high-protein options like saksang and fiber-rich mie gomak without compromising on taste. Free from artificial additives, each meal is a wholesome tribute to tradition, promoting well-being while honoring the culinary wisdom passed down through centuries.
+              </p>
             </div>
           </div>
         </div>
       </motion.section>
-
-      <Footer />
     </div>
   );
 };

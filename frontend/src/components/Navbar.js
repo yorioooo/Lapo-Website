@@ -9,12 +9,12 @@ const Navbar = () => {
     <nav className="fixed top-0 w-full bg-batak-red text-white shadow-lg z-50">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          {/* Logo Kiri: Mirip Ladang Lima */}
+          {/* Logo Kiri: Mirip Tiso – Simple Brand */}
           <Link to="/" className="text-2xl font-bold flex items-center">
-            Lapo Batak
+            Lapo Batak  {/* Tambah <img src="logo-url" className="h-8 ml-2" /> jika punya logo */}
           </Link>
 
-          {/* Menu Tengah: Horizontal */}
+          {/* Menu Tengah: Horizontal, Mirip Tiso (SHOP/ABOUT/FAQ) */}
           <div className="hidden md:flex space-x-6 items-center">
             <Link to="/" className="hover:text-batak-krem transition-colors">Home</Link>
             <Link to="/about" className="hover:text-batak-krem transition-colors">About Us</Link>
@@ -24,22 +24,24 @@ const Navbar = () => {
             <Link to="/contact" className="hover:text-batak-krem transition-colors">Contact Us</Link>
           </div>
 
-          {/* Social Kanan: Mirip Ladang Lima */}
+          {/* Kanan: Mirip Tiso – My Account + Social */}
           <div className="hidden md:flex space-x-4 items-center">
-            <a href="#" className="text-xl hover:text-batak-krem transition-colors">📘</a> {/* Facebook */}
-            <a href="#" className="text-xl hover:text-batak-krem transition-colors">📷</a> {/* Instagram */}
+            <Link to="/account" className="text-sm font-semibold hover:text-batak-krem transition-colors">My Account</Link>
+            <a href="https://facebook.com/lapobatak" className="text-xl hover:text-batak-krem transition-colors" aria-label="Facebook">📘</a>
+            <a href="https://instagram.com/lapobatak" className="text-xl hover:text-batak-krem transition-colors" aria-label="Instagram">📷</a>
           </div>
 
           {/* Hamburger Mobile */}
           <button 
             onClick={() => setIsOpen(!isOpen)} 
             className="md:hidden p-2 text-xl"
+            aria-label="Toggle menu"
           >
             ☰
           </button>
         </div>
 
-        {/* Mobile Menu: Slide Down Animasi */}
+        {/* Mobile Menu: Slide Down, Mirip Tiso */}
         <AnimatePresence>
           {isOpen && (
             <motion.div 
@@ -55,9 +57,10 @@ const Navbar = () => {
               <Link to="/products" className="block py-2 hover:text-batak-krem" onClick={() => setIsOpen(false)}>Our Products</Link>
               <Link to="/articles" className="block py-2 hover:text-batak-krem" onClick={() => setIsOpen(false)}>Article</Link>
               <Link to="/contact" className="block py-2 hover:text-batak-krem" onClick={() => setIsOpen(false)}>Contact Us</Link>
+              <Link to="/account" className="block py-2 hover:text-batak-krem" onClick={() => setIsOpen(false)}>My Account</Link>
               <div className="flex space-x-4 pt-4 border-t border-batak-krem/20">
-                <a href="#" className="text-xl hover:text-batak-krem">📘</a>
-                <a href="#" className="text-xl hover:text-batak-krem">📷</a>
+                <a href="https://facebook.com/lapobatak" className="text-xl hover:text-batak-krem" aria-label="Facebook">📘</a>
+                <a href="https://instagram.com/lapobatak" className="text-xl hover:text-batak-krem" aria-label="Instagram">📷</a>
               </div>
             </motion.div>
           )}
